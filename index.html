@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Quest 🌸</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Nunito:wght@400;600;700;800&display=swap');
+
+  :root {
+    --sakura: #FF6B9D;
+    --sakura-light: #FFB3CC;
+    --sakura-pale: #FFF0F5;
+    --sky: #4FC3F7;
+    --sky-light: #E1F5FE;
+    --gold: #FFD700;
+    --gold-dark: #FFA000;
+    --mint: #69E8A0;
+    --mint-dark: #2ECC71;
+    --coral: #FF7043;
+    --navy: #1A237E;
+    --text-dark: #2D3748;
+    --text-mid: #4A5568;
+    --white: #FFFFFF;
+    --shadow: 0 4px 20px rgba(255,107,157,0.15);
+    --radius: 16px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'M PLUS Rounded 1c', 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #FFF0F5 0%, #E8F4FD 50%, #F0FFF4 100%);
+    min-height: 100vh;
+    color: var(--text-dark);
+  }
+
+  /* ===== HEADER ===== */
+  .header {
+    background: linear-gradient(135deg, var(--sakura), #FF8C69);
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 20px rgba(255,107,157,0.3);
+  }
+  .header-title { color: white; font-size: 20px; font-weight: 800; }
+  .header-title span { font-size: 24px; }
+
+  .stats-bar {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+  }
+  .stat-chip {
+    background: rgba(255,255,255,0.25);
+    border-radius: 20px;
+    padding: 4px 12px;
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* ===== SCREENS ===== */
+  .screen { display: none; padding: 20px; max-width: 600px; margin: 0 auto; }
+  .screen.active { display: block; }
+
+  /* ===== HOME ===== */
+  .hero {
+    text-align: center;
+    padding: 30px 0 20px;
+  }
+  .hero-emoji { font-size: 64px; margin-bottom: 8px; animation: float 3s ease-in-out infinite; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  .hero-title { font-size: 26px; font-weight: 800; color: var(--sakura); margin-bottom: 6px; }
+  .hero-sub { font-size: 14px; color: var(--text-mid); }
+
+  .level-banner {
+    background: linear-gradient(135deg, #FFF9C4, #FFE082);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    margin: 16px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 2px solid var(--gold-dark);
+  }
+  .level-badge {
+    width: 48px; height: 48px;
+    background: var(--gold-dark);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(255,160,0,0.4);
+  }
+  .level-info { flex: 1; }
+  .level-label { font-size: 11px; color: var(--gold-dark); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .level-name { font-size: 16px; font-weight: 800; color: var(--text-dark); }
+  .xp-bar-wrap { margin-top: 4px; background: rgba(0,0,0,0.1); border-radius: 10px; height: 8px; }
+  .xp-bar { background: var(--gold-dark); border-radius: 10px; height: 8px; transition: width 0.5s ease; }
+
+  .mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-top: 16px;
+  }
+  .mode-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 20px 16px;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow);
+  }
+  .mode-card:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(255,107,157,0.2); }
+  .mode-card:active { transform: scale(0.97); }
+  .mode-card.locked { opacity: 0.5; cursor: not-allowed; }
+  .mode-emoji { font-size: 36px; margin-bottom: 8px; }
+  .mode-name { font-size: 14px; font-weight: 800; color: var(--text-dark); margin-bottom: 4px; }
+  .mode-desc { font-size: 11px; color: var(--text-mid); line-height: 1.4; }
+  .mode-badge {
+    display: inline-block;
+    background: var(--sakura-pale);
+    color: var(--sakura);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 6px;
+  }
+
+  /* ===== CATEGORY SELECT ===== */
+  .screen-title {
+    font-size: 20px; font-weight: 800;
+    color: var(--sakura);
+    margin-bottom: 4px;
+  }
+  .screen-sub { font-size: 13px; color: var(--text-mid); margin-bottom: 20px; }
+
+  .cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .cat-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 18px 14px;
+    text-align: center;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+  }
+  .cat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+  }
+  .cat-card.family::before { background: var(--sakura); }
+  .cat-card.food::before { background: var(--coral); }
+  .cat-card.self::before { background: var(--sky); }
+  .cat-card.small::before { background: var(--mint-dark); }
+  .cat-card:hover { transform: translateY(-2px); border-color: var(--sakura-light); }
+  .cat-emoji { font-size: 32px; margin-bottom: 6px; }
+  .cat-name { font-size: 13px; font-weight: 800; color: var(--text-dark); margin-bottom: 2px; }
+  .cat-name-en { font-size: 10px; color: var(--text-mid); margin-bottom: 6px; }
+  .cat-count { font-size: 10px; color: var(--text-mid); }
+  .stars { color: var(--gold); font-size: 12px; }
+
+  /* ===== QUIZ ===== */
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .back-btn {
+    width: 36px; height: 36px;
+    background: white;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+    box-shadow: var(--shadow);
+    flex-shrink: 0;
+  }
+  .quiz-progress-wrap { flex: 1; }
+  .quiz-progress-label { font-size: 11px; color: var(--text-mid); margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .quiz-progress-bar { background: #E2E8F0; border-radius: 10px; height: 8px; }
+  .quiz-progress-fill { background: linear-gradient(90deg, var(--sakura), var(--sky)); border-radius: 10px; height: 8px; transition: width 0.4s ease; }
+
+  .question-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px 20px;
+    margin-bottom: 16px;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--sakura-light);
+  }
+  .question-type {
+    font-size: 11px; font-weight: 700;
+    color: var(--sakura);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .question-english {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+    line-height: 1.3;
+    font-family: 'Nunito', sans-serif;
+  }
+  .question-jp {
+    font-size: 13px;
+    color: var(--text-mid);
+    background: var(--sakura-pale);
+    border-radius: 10px;
+    padding: 8px 12px;
+    margin-bottom: 4px;
+  }
+  .question-context {
+    font-size: 12px; color: var(--text-mid);
+    font-style: italic; margin-top: 8px;
+  }
+
+  .choices { display: flex; flex-direction: column; gap: 10px; }
+  .choice-btn {
+    background: white;
+    border: 2px solid #E2E8F0;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: 'Nunito', sans-serif;
+  }
+  .choice-btn:hover:not(:disabled) { border-color: var(--sakura); background: var(--sakura-pale); }
+  .choice-letter {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #E2E8F0;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 800;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+  .choice-text { font-size: 14px; font-weight: 600; color: var(--text-dark); }
+  .choice-jp-text { font-size: 11px; color: var(--text-mid); }
+
+  .choice-btn.correct { background: #F0FFF4; border-color: var(--mint-dark); }
+  .choice-btn.correct .choice-letter { background: var(--mint-dark); color: white; }
+  .choice-btn.wrong { background: #FFF5F5; border-color: #FC8181; }
+  .choice-btn.wrong .choice-letter { background: #FC8181; color: white; }
+  .choice-btn:disabled { cursor: default; }
+
+  /* ===== FEEDBACK ===== */
+  .feedback-box {
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-top: 12px;
+    display: none;
+    animation: slideUp 0.3s ease;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .feedback-box.correct-fb { background: #F0FFF4; border: 2px solid var(--mint-dark); }
+  .feedback-box.wrong-fb { background: #FFF5F5; border: 2px solid #FC8181; }
+  .feedback-header { font-size: 16px; font-weight: 800; margin-bottom: 6px; }
+  .feedback-box.correct-fb .feedback-header { color: var(--mint-dark); }
+  .feedback-box.wrong-fb .feedback-header { color: #E53E3E; }
+  .feedback-explanation { font-size: 13px; color: var(--text-mid); line-height: 1.5; }
+  .feedback-tip {
+    margin-top: 8px;
+    font-size: 12px;
+    color: var(--text-mid);
+    background: rgba(0,0,0,0.04);
+    border-radius: 8px;
+    padding: 8px 10px;
+  }
+
+  .next-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--sakura), #FF8C69);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 800;
+    cursor: pointer;
+    margin-top: 14px;
+    display: none;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    box-shadow: 0 4px 20px rgba(255,107,157,0.4);
+    transition: all 0.2s;
+  }
+  .next-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 25px rgba(255,107,157,0.5); }
+
+  /* ===== RESULTS ===== */
+  .results-hero { text-align: center; padding: 30px 0 20px; }
+  .results-emoji { font-size: 72px; margin-bottom: 12px; }
+  .results-title { font-size: 24px; font-weight: 800; color: var(--sakura); margin-bottom: 6px; }
+  .results-sub { font-size: 14px; color: var(--text-mid); }
+
+  .score-ring-wrap {
+    display: flex; justify-content: center; margin: 20px 0;
+  }
+  .score-ring {
+    width: 120px; height: 120px;
+    border-radius: 50%;
+    background: conic-gradient(var(--sakura) 0%, var(--sakura) var(--pct), #E2E8F0 var(--pct), #E2E8F0 100%);
+    display: flex; align-items: center; justify-content: center;
+    position: relative;
+  }
+  .score-ring::before {
+    content: '';
+    position: absolute;
+    width: 90px; height: 90px;
+    background: white;
+    border-radius: 50%;
+  }
+  .score-number {
+    position: relative;
+    z-index: 1;
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--sakura);
+  }
+
+  .results-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px;
+    margin: 16px 0;
+  }
+  .result-stat {
+    background: white;
+    border-radius: var(--radius);
+    padding: 14px 10px;
+    text-align: center;
+    box-shadow: var(--shadow);
+  }
+  .result-stat-emoji { font-size: 24px; margin-bottom: 4px; }
+  .result-stat-value { font-size: 20px; font-weight: 800; color: var(--text-dark); }
+  .result-stat-label { font-size: 10px; color: var(--text-mid); }
+
+  .xp-earned {
+    background: linear-gradient(135deg, #FFF9C4, #FFE082);
+    border-radius: var(--radius);
+    padding: 16px;
+    text-align: center;
+    margin: 12px 0;
+    border: 2px solid var(--gold-dark);
+  }
+  .xp-earned-label { font-size: 12px; color: var(--gold-dark); font-weight: 700; }
+  .xp-earned-value { font-size: 28px; font-weight: 800; color: var(--gold-dark); }
+
+  .action-btns { display: flex; gap: 10px; }
+  .btn-primary {
+    flex: 1;
+    background: linear-gradient(135deg, var(--sakura), #FF8C69);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    box-shadow: 0 4px 20px rgba(255,107,157,0.4);
+    transition: all 0.2s;
+  }
+  .btn-secondary {
+    flex: 1;
+    background: white;
+    color: var(--sakura);
+    border: 2px solid var(--sakura-light);
+    border-radius: var(--radius);
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    transition: all 0.2s;
+  }
+  .btn-primary:hover, .btn-secondary:hover { transform: translateY(-2px); }
+
+  /* ===== PHRASEBOOK ===== */
+  .phrase-section { margin-bottom: 20px; }
+  .phrase-section-title {
+    font-size: 14px; font-weight: 800;
+    color: var(--sakura);
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .phrase-card {
+    background: white;
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    margin-bottom: 8px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 4px solid var(--sakura-light);
+  }
+  .phrase-card:hover { transform: translateX(4px); border-left-color: var(--sakura); }
+  .phrase-en { font-size: 15px; font-weight: 700; color: var(--text-dark); font-family: 'Nunito', sans-serif; }
+  .phrase-jp { font-size: 12px; color: var(--text-mid); margin-top: 2px; }
+  .phrase-context { font-size: 10px; color: var(--sakura); margin-top: 2px; font-weight: 600; }
+
+  /* ===== TOASTS & ANIMATIONS ===== */
+  .toast {
+    position: fixed;
+    top: 70px; left: 50%;
+    transform: translateX(-50%) translateY(-20px);
+    background: var(--text-dark);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+    opacity: 0;
+    transition: all 0.3s;
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .combo-pop {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+    color: white;
+    padding: 20px 30px;
+    border-radius: 20px;
+    font-size: 24px;
+    font-weight: 800;
+    text-align: center;
+    z-index: 998;
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    pointer-events: none;
+  }
+  .combo-pop.show { transform: translate(-50%, -50%) scale(1); }
+
+  /* AI Chat */
+  .chat-wrap {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--sakura-light);
+    margin-bottom: 16px;
+    height: 350px;
+    display: flex;
+    flex-direction: column;
+  }
+  .chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .chat-msg {
+    max-width: 80%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .chat-msg.family {
+    background: var(--sakura-pale);
+    border: 1px solid var(--sakura-light);
+    align-self: flex-start;
+    border-bottom-left-radius: 4px;
+  }
+  .chat-msg.user-msg {
+    background: linear-gradient(135deg, var(--sakura), #FF8C69);
+    color: white;
+    align-self: flex-end;
+    border-bottom-right-radius: 4px;
+  }
+  .chat-msg-label { font-size: 10px; font-weight: 700; margin-bottom: 3px; color: var(--text-mid); }
+  .chat-msg.user-msg .chat-msg-label { color: rgba(255,255,255,0.7); }
+  .chat-msg-jp { font-size: 10px; color: var(--text-mid); margin-top: 4px; }
+  .chat-input-row {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    border-top: 1px solid #E2E8F0;
+    background: #FAFAFA;
+  }
+  .chat-input {
+    flex: 1;
+    border: 2px solid #E2E8F0;
+    border-radius: var(--radius);
+    padding: 10px 14px;
+    font-size: 13px;
+    font-family: 'Nunito', sans-serif;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .chat-input:focus { border-color: var(--sakura); }
+  .chat-send-btn {
+    background: linear-gradient(135deg, var(--sakura), #FF8C69);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    padding: 10px 16px;
+    font-size: 18px;
+    cursor: pointer;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+    transition: all 0.2s;
+    box-shadow: 0 2px 10px rgba(255,107,157,0.4);
+  }
+  .chat-send-btn:hover { transform: scale(1.05); }
+  .chat-loading { display: flex; gap: 4px; align-items: center; padding: 4px 0; }
+  .chat-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sakura-light); animation: bounce 1.2s infinite; }
+  .chat-dot:nth-child(2) { animation-delay: 0.2s; }
+  .chat-dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce {
+    0%, 80%, 100% { transform: translateY(0); }
+    40% { transform: translateY(-6px); }
+  }
+
+  /* NAV */
+  .bottom-nav {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: white;
+    display: flex;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.08);
+    z-index: 100;
+  }
+  .nav-btn {
+    flex: 1;
+    padding: 12px 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-mid);
+    font-size: 9px;
+    font-weight: 700;
+    font-family: 'M PLUS Rounded 1c', sans-serif;
+  }
+  .nav-btn.active { color: var(--sakura); }
+  .nav-icon { font-size: 22px; }
+
+  .page-pad { padding-bottom: 80px; }
+
+  /* Shimmer */
+  .shimmer-wrap { position: relative; overflow: hidden; }
+  .shimmer-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+    animation: shimmer 2s infinite;
+  }
+  @keyframes shimmer {
+    to { left: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-title"><span>🌸</span> English Quest</div>
+  <div class="stats-bar">
+    <div class="stat-chip">⭐ <span id="header-xp">0</span> XP</div>
+    <div class="stat-chip">🔥 <span id="header-streak">0</span></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+<div class="combo-pop" id="combo-pop"></div>
+
+<!-- ===== HOME SCREEN ===== -->
+<div class="screen active page-pad" id="screen-home">
+  <div class="hero">
+    <div class="hero-emoji">🌸</div>
+    <div class="hero-title">English Quest へようこそ！</div>
+    <div class="hero-sub">タイの彼女の家族と話せるようになろう 🇹🇭</div>
+  </div>
+
+  <div class="level-banner">
+    <div class="level-badge">🌱</div>
+    <div class="level-info">
+      <div class="level-label">現在のレベル</div>
+      <div class="level-name" id="level-name">はじまりの旅人</div>
+      <div class="xp-bar-wrap">
+        <div class="xp-bar" id="xp-bar" style="width: 0%"></div>
+      </div>
+    </div>
+    <div style="text-align:center; font-size:12px; color:var(--text-mid);">
+      <div id="xp-display" style="font-weight:800; font-size:16px; color:var(--gold-dark);">0</div>
+      XP
+    </div>
+  </div>
+
+  <div class="mode-grid">
+    <div class="mode-card" onclick="showCategorySelect('quiz')">
+      <div class="mode-emoji">🎯</div>
+      <div class="mode-name">クイズで練習</div>
+      <div class="mode-desc">家族の質問に答えよう！</div>
+      <div class="mode-badge">選択問題</div>
+    </div>
+    <div class="mode-card" onclick="showCategorySelect('ask')">
+      <div class="mode-emoji">💬</div>
+      <div class="mode-name">質問を学ぶ</div>
+      <div class="mode-desc">会話を始める方法を覚えよう</div>
+      <div class="mode-badge">フレーズ集</div>
+    </div>
+    <div class="mode-card" onclick="goScreen('screen-chat')">
+      <div class="mode-emoji">🤖</div>
+      <div class="mode-name">AI と練習</div>
+      <div class="mode-desc">家族の役のAIと自由に話そう</div>
+      <div class="mode-badge">フリー練習</div>
+    </div>
+    <div class="mode-card" onclick="goScreen('screen-phrasebook')">
+      <div class="mode-emoji">📖</div>
+      <div class="mode-name">フレーズ帳</div>
+      <div class="mode-desc">よく使う英語をチェック</div>
+      <div class="mode-badge">いつでも確認</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CATEGORY SELECT ===== -->
+<div class="screen page-pad" id="screen-category">
+  <div class="quiz-header">
+    <button class="back-btn" onclick="goScreen('screen-home')">←</button>
+    <div>
+      <div class="screen-title" id="cat-title">カテゴリを選ぼう</div>
+      <div class="screen-sub">どのシーンを練習する？</div>
+    </div>
+  </div>
+  <div class="cat-grid">
+    <div class="cat-card family" onclick="startMode('family')">
+      <div class="cat-emoji">👨‍👩‍👧‍👦</div>
+      <div class="cat-name">家族との挨拶</div>
+      <div class="cat-name-en">Meeting the Family</div>
+      <div class="stars">★★★★★</div>
+    </div>
+    <div class="cat-card food" onclick="startMode('food')">
+      <div class="cat-emoji">🍜</div>
+      <div class="cat-name">食べ物・食事</div>
+      <div class="cat-name-en">Food & Dining</div>
+      <div class="stars">★★★★☆</div>
+    </div>
+    <div class="cat-card self" onclick="startMode('self')">
+      <div class="cat-emoji">🙋‍♂️</div>
+      <div class="cat-name">自己紹介</div>
+      <div class="cat-name-en">About Yourself</div>
+      <div class="stars">★★★★☆</div>
+    </div>
+    <div class="cat-card small" onclick="startMode('small')">
+      <div class="cat-emoji">☀️</div>
+      <div class="cat-name">日常会話</div>
+      <div class="cat-name-en">Small Talk</div>
+      <div class="stars">★★★☆☆</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUIZ SCREEN ===== -->
+<div class="screen page-pad" id="screen-quiz">
+  <div class="quiz-header">
+    <button class="back-btn" onclick="goScreen('screen-category')">←</button>
+    <div class="quiz-progress-wrap">
+      <div class="quiz-progress-label">
+        <span id="q-label">問題 1 / 5</span>
+        <span id="q-score">✅ 0</span>
+      </div>
+      <div class="quiz-progress-bar">
+        <div class="quiz-progress-fill" id="q-progress" style="width: 0%"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="question-card">
+    <div class="question-type">👨‍👩‍👧 <span id="q-type">家族からの質問</span></div>
+    <div class="question-english" id="q-english">Where are you from?</div>
+    <div class="question-jp" id="q-jp">🇯🇵 どこから来たの？</div>
+    <div class="question-context" id="q-context">💡 シーン: 夕食の席でお父さんが聞いてきた</div>
+  </div>
+
+  <div class="choices" id="choices-wrap"></div>
+
+  <div class="feedback-box" id="feedback-box">
+    <div class="feedback-header" id="fb-header"></div>
+    <div class="feedback-explanation" id="fb-explanation"></div>
+    <div class="feedback-tip" id="fb-tip"></div>
+  </div>
+
+  <button class="next-btn" id="next-btn" onclick="nextQuestion()">次の問題へ →</button>
+</div>
+
+<!-- ===== RESULTS SCREEN ===== -->
+<div class="screen page-pad" id="screen-results">
+  <div class="results-hero">
+    <div class="results-emoji" id="results-emoji">🎉</div>
+    <div class="results-title" id="results-title">よくできました！</div>
+    <div class="results-sub" id="results-sub">すごい！家族と話せるね！</div>
+  </div>
+
+  <div class="score-ring-wrap">
+    <div class="score-ring" id="score-ring" style="--pct: 0%">
+      <div class="score-number" id="score-number">0%</div>
+    </div>
+  </div>
+
+  <div class="results-stats">
+    <div class="result-stat">
+      <div class="result-stat-emoji">✅</div>
+      <div class="result-stat-value" id="r-correct">0</div>
+      <div class="result-stat-label">正解</div>
+    </div>
+    <div class="result-stat">
+      <div class="result-stat-emoji">❌</div>
+      <div class="result-stat-value" id="r-wrong">0</div>
+      <div class="result-stat-label">不正解</div>
+    </div>
+    <div class="result-stat">
+      <div class="result-stat-emoji">⚡</div>
+      <div class="result-stat-value" id="r-combo">0</div>
+      <div class="result-stat-label">最高コンボ</div>
+    </div>
+  </div>
+
+  <div class="xp-earned">
+    <div class="xp-earned-label">獲得XP ✨</div>
+    <div class="xp-earned-value" id="xp-earned">+0 XP</div>
+  </div>
+
+  <div class="action-btns">
+    <button class="btn-primary" onclick="goScreen('screen-category')">もう一度 🔄</button>
+    <button class="btn-secondary" onclick="goScreen('screen-home')">ホーム 🏠</button>
+  </div>
+</div>
+
+<!-- ===== CHAT SCREEN ===== -->
+<div class="screen page-pad" id="screen-chat">
+  <div class="quiz-header">
+    <button class="back-btn" onclick="goScreen('screen-home')">←</button>
+    <div>
+      <div class="screen-title">AI と練習 🤖</div>
+      <div class="screen-sub">家族の役のAIと自由に英語で話そう</div>
+    </div>
+  </div>
+
+  <div class="chat-wrap">
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-msg family">
+        <div class="chat-msg-label">👩 お母さん (Mom)</div>
+        Hello! Nice to meet you! How are you?
+        <div class="chat-msg-jp">🇯🇵 はじめまして！元気ですか？</div>
+      </div>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chat-input" placeholder="英語で返事してみよう... (例: I am fine, thank you!)" onkeydown="if(event.key==='Enter') sendChat()">
+      <button class="chat-send-btn" onclick="sendChat()">➤</button>
+    </div>
+  </div>
+
+  <div style="background: var(--sakura-pale); border-radius: var(--radius); padding: 12px 14px; font-size: 12px; color: var(--text-mid); border: 1px solid var(--sakura-light);">
+    💡 <strong>ヒント:</strong> スペルが間違っていても大丈夫！AIが優しく直してくれます。英語で答えてみよう！
+  </div>
+</div>
+
+<!-- ===== PHRASEBOOK ===== -->
+<div class="screen page-pad" id="screen-phrasebook">
+  <div class="quiz-header">
+    <button class="back-btn" onclick="goScreen('screen-home')">←</button>
+    <div>
+      <div class="screen-title">フレーズ帳 📖</div>
+      <div class="screen-sub">よく使う英語フレーズ集</div>
+    </div>
+  </div>
+
+  <div class="phrase-section">
+    <div class="phrase-section-title">👨‍👩‍👧 家族への挨拶</div>
+    <div class="phrase-card"><div class="phrase-en">Nice to meet you!</div><div class="phrase-jp">はじめまして！</div><div class="phrase-context">🎯 初対面で必ず使う</div></div>
+    <div class="phrase-card"><div class="phrase-en">Thank you for having me.</div><div class="phrase-jp">お招きありがとうございます。</div><div class="phrase-context">🏠 家に招待されたとき</div></div>
+    <div class="phrase-card"><div class="phrase-en">Your home is beautiful!</div><div class="phrase-jp">お家、素敵ですね！</div><div class="phrase-context">😊 褒め言葉 - 印象アップ！</div></div>
+    <div class="phrase-card"><div class="phrase-en">I am from Japan.</div><div class="phrase-jp">日本から来ました。</div><div class="phrase-context">💬 自己紹介の基本</div></div>
+  </div>
+
+  <div class="phrase-section">
+    <div class="phrase-section-title">🍜 食事のとき</div>
+    <div class="phrase-card"><div class="phrase-en">This is delicious!</div><div class="phrase-jp">これ、美味しいです！</div><div class="phrase-context">🍽️ 必ず言おう！喜ばれる</div></div>
+    <div class="phrase-card"><div class="phrase-en">Can I have more, please?</div><div class="phrase-jp">おかわりをもらえますか？</div><div class="phrase-context">😋 褒め言葉にもなる</div></div>
+    <div class="phrase-card"><div class="phrase-en">What is this called?</div><div class="phrase-jp">これは何という料理ですか？</div><div class="phrase-context">🤔 料理の名前を聞くとき</div></div>
+    <div class="phrase-card"><div class="phrase-en">I am full, thank you!</div><div class="phrase-jp">お腹いっぱいです、ありがとう！</div><div class="phrase-context">😌 食後に</div></div>
+  </div>
+
+  <div class="phrase-section">
+    <div class="phrase-section-title">🙋‍♂️ 自分のことを話す</div>
+    <div class="phrase-card"><div class="phrase-en">I am a software developer.</div><div class="phrase-jp">私はソフトウェアエンジニアです。</div><div class="phrase-context">💻 仕事の説明</div></div>
+    <div class="phrase-card"><div class="phrase-en">I work in Tokyo.</div><div class="phrase-jp">東京で働いています。</div><div class="phrase-context">📍 勤務地</div></div>
+    <div class="phrase-card"><div class="phrase-en">I love Thai food!</div><div class="phrase-jp">タイ料理が大好きです！</div><div class="phrase-context">❤️ 家族が喜ぶ一言</div></div>
+    <div class="phrase-card"><div class="phrase-en">She means everything to me.</div><div class="phrase-jp">彼女は私の全てです。</div><div class="phrase-context">💕 最強の一言</div></div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="nav-home" onclick="navTo('home')">
+    <span class="nav-icon">🏠</span>ホーム
+  </button>
+  <button class="nav-btn" id="nav-quiz" onclick="navTo('quiz')">
+    <span class="nav-icon">🎯</span>クイズ
+  </button>
+  <button class="nav-btn" id="nav-chat" onclick="navTo('chat')">
+    <span class="nav-icon">🤖</span>AI練習
+  </button>
+  <button class="nav-btn" id="nav-phrasebook" onclick="navTo('phrasebook')">
+    <span class="nav-icon">📖</span>フレーズ
+  </button>
+</div>
+
+<script>
+// ===== STATE =====
+let xp = 0, streak = 0, currentMode = '', currentCategoryMode = 'quiz';
+let questions = [], currentQ = 0, score = 0, combo = 0, maxCombo = 0;
+let chatHistory = [];
+
+// ===== LEVEL SYSTEM =====
+const levels = [
+  { name: 'はじまりの旅人', emoji: '🌱', min: 0 },
+  { name: '英語の冒険者', emoji: '⚔️', min: 100 },
+  { name: '言葉の探検家', emoji: '🗺️', min: 250 },
+  { name: '家族の友達', emoji: '👨‍👩‍👧', min: 500 },
+  { name: 'English Master', emoji: '🌟', min: 1000 }
+];
+
+function getLevel(xp) {
+  let lv = levels[0];
+  for (const l of levels) { if (xp >= l.min) lv = l; }
+  return lv;
+}
+
+function updateXPDisplay() {
+  document.getElementById('header-xp').textContent = xp;
+  document.getElementById('xp-display').textContent = xp;
+  const lv = getLevel(xp);
+  document.getElementById('level-name').textContent = lv.emoji + ' ' + lv.name;
+  const next = levels[levels.indexOf(lv) + 1];
+  const pct = next ? Math.min(100, ((xp - lv.min) / (next.min - lv.min)) * 100) : 100;
+  document.getElementById('xp-bar').style.width = pct + '%';
+}
+
+// ===== QUESTIONS DATA =====
+const qData = {
+  family: [
+    {
+      en: "Where are you from?",
+      jp: "どこから来たの？",
+      context: "シーン: お父さんが最初に聞く質問",
+      choices: [
+        { en: "I am from Japan.", jp: "日本から来ました。", correct: true },
+        { en: "I am from China.", jp: "中国から来ました。", correct: false },
+        { en: "I don't know.", jp: "わかりません。", correct: false },
+        { en: "Yes, I am.", jp: "はい、そうです。", correct: false }
+      ],
+      explanation: "✅ 'I am from Japan.' は完璧な答えです！",
+      tip: "💡 'I'm from Tokyo, Japan.' と言うともっと詳しく伝わります！"
+    },
+    {
+      en: "What do you do for work?",
+      jp: "仕事は何をしているの？",
+      context: "シーン: お母さんが気になって聞いてくれた",
+      choices: [
+        { en: "I am a student.", jp: "学生です。", correct: false },
+        { en: "I work as a software developer.", jp: "ソフトウェアエンジニアです。", correct: true },
+        { en: "I don't work.", jp: "仕事していません。", correct: false },
+        { en: "I am a doctor.", jp: "医者です。", correct: false }
+      ],
+      explanation: "✅ 'I work as a [job].' は仕事を伝える自然な言い方です！",
+      tip: "💡 'I work in IT / technology.' でもOKです！"
+    },
+    {
+      en: "How long have you been together?",
+      jp: "付き合ってどのくらい？",
+      context: "シーン: お姉さんが気になって聞いてきた",
+      choices: [
+        { en: "We have been together for one year.", jp: "1年間付き合っています。", correct: true },
+        { en: "She is my friend.", jp: "友達です。", correct: false },
+        { en: "I don't remember.", jp: "覚えていません。", correct: false },
+        { en: "We just met.", jp: "今日会いました。", correct: false }
+      ],
+      explanation: "✅ 'We have been together for [time].' が正しい表現！",
+      tip: "💡 'We met in [year].' と言っても伝わります！"
+    },
+    {
+      en: "Do you like Thai food?",
+      jp: "タイ料理は好き？",
+      context: "シーン: 夕食の準備中に聞かれた",
+      choices: [
+        { en: "No, not really.", jp: "いいえ、あまり好きではありません。", correct: false },
+        { en: "Yes, I love it! It's delicious.", jp: "はい、大好きです！美味しいですね！", correct: true },
+        { en: "I don't know Thai food.", jp: "タイ料理を知りません。", correct: false },
+        { en: "Maybe.", jp: "たぶん。", correct: false }
+      ],
+      explanation: "✅ 熱意を見せることが大事！'I love it!' で家族も喜ぶ！",
+      tip: "💡 具体的に 'I love pad thai and green curry!' と言うともっとGood！"
+    },
+    {
+      en: "Do you plan to visit Thailand again?",
+      jp: "またタイに来る予定はある？",
+      context: "シーン: お父さんが将来について聞いてきた",
+      choices: [
+        { en: "I hope to visit as often as I can.", jp: "できるだけよく来たいです。", correct: true },
+        { en: "No, this is my last time.", jp: "いいえ、これが最後です。", correct: false },
+        { en: "I am not sure.", jp: "わかりません。", correct: false },
+        { en: "Thailand is too hot.", jp: "タイは暑すぎます。", correct: false }
+      ],
+      explanation: "✅ ポジティブな返事が家族に好印象を与えます！",
+      tip: "💡 'I love it here. I want to come back many times!' でさらに印象UP！"
+    }
+  ],
+  food: [
+    {
+      en: "Would you like some more?",
+      jp: "おかわりはどう？",
+      context: "シーン: お母さんが料理をすすめてくれた",
+      choices: [
+        { en: "No thanks, I'm full.", jp: "いいえ、お腹いっぱいです。", correct: false },
+        { en: "Yes please, it's so delicious!", jp: "はい、ぜひ！とても美味しいです！", correct: true },
+        { en: "I don't like it.", jp: "好きではありません。", correct: false },
+        { en: "Maybe later.", jp: "あとで。", correct: false }
+      ],
+      explanation: "✅ おかわりを受け入れて褒めると家族がとっても喜ぶ！",
+      tip: "💡 'This is the best [dish name] I've ever had!' と言えばパーフェクト！"
+    },
+    {
+      en: "Is the food too spicy for you?",
+      jp: "辛すぎない？",
+      context: "シーン: お母さんが心配して聞いてきた",
+      choices: [
+        { en: "Yes, it's way too spicy!", jp: "はい、辛すぎます！", correct: false },
+        { en: "It's a little spicy but very delicious!", jp: "少し辛いけどとても美味しいです！", correct: true },
+        { en: "I can't eat this.", jp: "食べられません。", correct: false },
+        { en: "I don't know.", jp: "わかりません。", correct: false }
+      ],
+      explanation: "✅ 正直に言いつつ美味しいと伝えるバランスが大事！",
+      tip: "💡 辛さが苦手でも 'I'm trying to enjoy spicy food!' と前向きに！"
+    },
+    {
+      en: "What would you like to eat?",
+      jp: "何が食べたい？",
+      context: "シーン: 外食に誘ってくれた",
+      choices: [
+        { en: "I want to try traditional Thai food!", jp: "本格的なタイ料理を食べたいです！", correct: true },
+        { en: "I want Japanese food.", jp: "日本食がいいです。", correct: false },
+        { en: "Anything is fine.", jp: "何でもいいです。", correct: false },
+        { en: "I'm not hungry.", jp: "お腹空いていません。", correct: false }
+      ],
+      explanation: "✅ タイ料理への興味を見せると家族がとっても嬉しい！",
+      tip: "💡 'I've always wanted to try authentic Thai food!' でさらに気持ちが伝わる！"
+    }
+  ],
+  self: [
+    {
+      en: "Tell me about Japan!",
+      jp: "日本のことを教えて！",
+      context: "シーン: 妹が日本に興味を持っている",
+      choices: [
+        { en: "Japan is a beautiful country with amazing food and culture.", jp: "日本は美しい国で、素晴らしい食べ物と文化があります。", correct: true },
+        { en: "Japan is just okay.", jp: "日本は普通です。", correct: false },
+        { en: "I don't know.", jp: "わかりません。", correct: false },
+        { en: "Japan is very cold.", jp: "日本はとても寒いです。", correct: false }
+      ],
+      explanation: "✅ 自国を誇りを持って紹介できると素敵！",
+      tip: "💡 'You should visit Japan sometime!' と招待するともっとGood！"
+    },
+    {
+      en: "Do you speak any Thai?",
+      jp: "タイ語は話せる？",
+      context: "シーン: 家族みんなが気になっている",
+      choices: [
+        { en: "Not yet, but I am trying to learn!", jp: "まだですが、勉強しています！", correct: true },
+        { en: "No, and I don't plan to.", jp: "いいえ、勉強する予定もありません。", correct: false },
+        { en: "Thai is too difficult.", jp: "タイ語は難しすぎます。", correct: false },
+        { en: "I only speak Japanese.", jp: "日本語しか話せません。", correct: false }
+      ],
+      explanation: "✅ やる気を見せることが大事！努力する姿が好印象を与える！",
+      tip: "💡 'Sawasdee khrap!' と一言タイ語で言えたら最高！"
+    },
+    {
+      en: "What are your hobbies?",
+      jp: "趣味は何？",
+      context: "シーン: お姉さんたちと話しているとき",
+      choices: [
+        { en: "I enjoy gaming and traveling.", jp: "ゲームと旅行が好きです。", correct: true },
+        { en: "I have no hobbies.", jp: "趣味はありません。", correct: false },
+        { en: "I only work.", jp: "仕事だけです。", correct: false },
+        { en: "I don't like anything.", jp: "好きなものはありません。", correct: false }
+      ],
+      explanation: "✅ 趣味を話すことで会話が盛り上がる！",
+      tip: "💡 共通の趣味が見つかると一気に仲良くなれます！"
+    }
+  ],
+  small: [
+    {
+      en: "How was your flight?",
+      jp: "フライトはどうだった？",
+      context: "シーン: 空港からお家に着いたとき",
+      choices: [
+        { en: "It was long but I'm excited to be here!", jp: "長かったですが、来られて嬉しいです！", correct: true },
+        { en: "It was terrible.", jp: "最悪でした。", correct: false },
+        { en: "I don't want to talk about it.", jp: "話したくありません。", correct: false },
+        { en: "Too many people.", jp: "人が多すぎました。", correct: false }
+      ],
+      explanation: "✅ ポジティブに答えることで場の雰囲気が明るくなる！",
+      tip: "💡 'I couldn't wait to meet everyone!' と加えると完璧！"
+    },
+    {
+      en: "Are you tired from the journey?",
+      jp: "旅で疲れた？",
+      context: "シーン: お母さんが気遣ってくれた",
+      choices: [
+        { en: "A little, but I'm happy to be here!", jp: "少しですが、来られて嬉しいです！", correct: true },
+        { en: "Yes, very tired. I need to sleep now.", jp: "はい、とても疲れています。今すぐ寝ます。", correct: false },
+        { en: "I am always tired.", jp: "いつも疲れています。", correct: false },
+        { en: "Don't ask me that.", jp: "それは聞かないでください。", correct: false }
+      ],
+      explanation: "✅ 疲れていても笑顔で答えると家族が安心する！",
+      tip: "💡 気遣ってくれたことへの感謝も忘れずに！"
+    }
+  ]
+};
+
+// ===== NAVIGATION =====
+function goScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function navTo(page) {
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('nav-' + page).classList.add('active');
+  const map = { home: 'screen-home', quiz: 'screen-category', chat: 'screen-chat', phrasebook: 'screen-phrasebook' };
+  if (page === 'quiz') currentCategoryMode = 'quiz';
+  goScreen(map[page]);
+}
+
+function showCategorySelect(mode) {
+  currentCategoryMode = mode;
+  document.getElementById('cat-title').textContent = mode === 'quiz' ? 'クイズのカテゴリ 🎯' : 'フレーズカテゴリ 💬';
+  goScreen('screen-category');
+}
+
+// ===== QUIZ LOGIC =====
+function startMode(cat) {
+  currentMode = cat;
+  questions = [...(qData[cat] || [])].sort(() => Math.random() - 0.5);
+  currentQ = 0; score = 0; combo = 0; maxCombo = 0;
+  loadQuestion();
+  goScreen('screen-quiz');
+}
+
+function loadQuestion() {
+  const q = questions[currentQ];
+  if (!q) { showResults(); return; }
+
+  document.getElementById('q-label').textContent = `問題 ${currentQ+1} / ${questions.length}`;
+  document.getElementById('q-score').textContent = `✅ ${score}`;
+  document.getElementById('q-progress').style.width = (currentQ / questions.length * 100) + '%';
+  document.getElementById('q-english').textContent = q.en;
+  document.getElementById('q-jp').textContent = '🇯🇵 ' + q.jp;
+  document.getElementById('q-context').textContent = '💡 ' + q.context;
+  document.getElementById('q-type').textContent = '家族からの質問';
+
+  const wrap = document.getElementById('choices-wrap');
+  wrap.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  const shuffled = [...q.choices].sort(() => Math.random() - 0.5);
+
+  shuffled.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.innerHTML = `
+      <div class="choice-letter">${letters[i]}</div>
+      <div>
+        <div class="choice-text">${c.en}</div>
+        <div class="choice-jp-text">${c.jp}</div>
+      </div>`;
+    btn.onclick = () => selectAnswer(c.correct, btn, shuffled, q);
+    wrap.appendChild(btn);
+  });
+
+  document.getElementById('feedback-box').style.display = 'none';
+  document.getElementById('next-btn').style.display = 'none';
+}
+
+function selectAnswer(isCorrect, btn, choices, q) {
+  document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+
+  const correctBtn = [...document.querySelectorAll('.choice-btn')].find((b, i) => choices[i]?.correct);
+  document.querySelectorAll('.choice-btn').forEach((b, i) => {
+    if (choices[i]?.correct) b.classList.add('correct');
+  });
+
+  const fb = document.getElementById('feedback-box');
+  fb.style.display = 'block';
+  fb.className = 'feedback-box ' + (isCorrect ? 'correct-fb' : 'wrong-fb');
+
+  if (isCorrect) {
+    btn.classList.add('correct');
+    score++;
+    combo++;
+    if (combo > maxCombo) maxCombo = combo;
+    const earnedXP = combo >= 3 ? 20 : 10;
+    xp += earnedXP;
+    streak++;
+    updateXPDisplay();
+    document.getElementById('header-streak').textContent = streak;
+    document.getElementById('fb-header').textContent = combo >= 3 ? `🔥 ${combo}コンボ！ +${earnedXP} XP` : '🎉 正解！ +10 XP';
+    document.getElementById('fb-explanation').textContent = q.explanation;
+    document.getElementById('fb-tip').textContent = q.tip;
+    if (combo >= 3) showComboPop(`🔥 ${combo} COMBO!`);
+    showToast(combo >= 3 ? '🔥 コンボボーナス！' : '✅ 正解！素晴らしい！');
+  } else {
+    btn.classList.add('wrong');
+    combo = 0;
+    streak = 0;
+    document.getElementById('header-streak').textContent = streak;
+    document.getElementById('fb-header').textContent = '❌ 残念...';
+    document.getElementById('fb-explanation').textContent = '正しい答えは緑でマークされています。';
+    document.getElementById('fb-tip').textContent = q.tip;
+    showToast('❌ もう一度覚えよう！');
+  }
+
+  document.getElementById('next-btn').style.display = 'block';
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= questions.length) showResults();
+  else loadQuestion();
+}
+
+function showResults() {
+  const pct = Math.round((score / questions.length) * 100);
+  const earnedXP = score * 10 + (maxCombo >= 3 ? 20 : 0);
+
+  document.getElementById('results-emoji').textContent = pct >= 80 ? '🏆' : pct >= 60 ? '🎉' : '💪';
+  document.getElementById('results-title').textContent = pct >= 80 ? '素晴らしい！' : pct >= 60 ? 'よくできました！' : 'もう少し！';
+  document.getElementById('results-sub').textContent = pct >= 80 ? '家族にきっと好かれます！🌸' : pct >= 60 ? 'どんどん上達してるよ！' : 'また挑戦してみよう！';
+  document.getElementById('r-correct').textContent = score;
+  document.getElementById('r-wrong').textContent = questions.length - score;
+  document.getElementById('r-combo').textContent = maxCombo;
+  document.getElementById('score-number').textContent = pct + '%';
+  document.getElementById('score-ring').style.setProperty('--pct', pct + '%');
+  document.getElementById('xp-earned').textContent = '+' + earnedXP + ' XP';
+
+  goScreen('screen-results');
+}
+
+// ===== CHAT =====
+const FAMILY_SYSTEM = `You are playing the role of a warm, friendly Thai family member (like a mom or older sister) talking to a Japanese boyfriend who is learning English. 
+Rules:
+- Keep messages SHORT (1-3 sentences max)
+- Use simple, clear English — no complex vocabulary
+- After each reply, add a Japanese translation in parentheses like: (日本語: ...)
+- Be encouraging and warm. If the user makes English mistakes, gently correct them in a kind way
+- Ask follow-up questions to keep the conversation going
+- Scenario: The boyfriend is visiting Thailand to meet the girlfriend's family for the first time`;
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  const msgs = document.getElementById('chat-messages');
+
+  const userDiv = document.createElement('div');
+  userDiv.className = 'chat-msg user-msg';
+  userDiv.innerHTML = `<div class="chat-msg-label">あなた (You)</div>${text}`;
+  msgs.appendChild(userDiv);
+
+  const loadDiv = document.createElement('div');
+  loadDiv.className = 'chat-msg family';
+  loadDiv.innerHTML = `<div class="chat-msg-label">👩 Family</div><div class="chat-loading"><div class="chat-dot"></div><div class="chat-dot"></div><div class="chat-dot"></div></div>`;
+  msgs.appendChild(loadDiv);
+  msgs.scrollTop = msgs.scrollHeight;
+
+  chatHistory.push({ role: 'user', content: text });
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 1000,
+        system: FAMILY_SYSTEM,
+        messages: chatHistory
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Sorry, could you repeat that?';
+    chatHistory.push({ role: 'assistant', content: reply });
+
+    loadDiv.innerHTML = `<div class="chat-msg-label">👩 Family</div>${reply}`;
+    msgs.scrollTop = msgs.scrollHeight;
+    xp += 5;
+    updateXPDisplay();
+  } catch (e) {
+    loadDiv.innerHTML = `<div class="chat-msg-label">👩 Family</div>Sorry, I had trouble understanding. Can you try again? <div class="chat-msg-jp">(日本語: ごめんなさい、もう一度言ってもらえる？)</div>`;
+  }
+}
+
+// ===== HELPERS =====
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+function showComboPop(msg) {
+  const p = document.getElementById('combo-pop');
+  p.innerHTML = msg + '<br><span style="font-size:14px">ボーナスXP獲得！</span>';
+  p.classList.add('show');
+  setTimeout(() => p.classList.remove('show'), 1500);
+}
+
+updateXPDisplay();
+</script>
+</body>
+</html>
